@@ -3,8 +3,45 @@
   <div class="container">
     <h1 class="title">Sistema recomendador de automóviles</h1>
     <div class="card p-4">
-      <h2 class="subtitle is-4">Recomendaciones</h2>
-      <section class="section">Hola</section>
+      <a href="/">Volver</a>
+      <section class="section">
+        {% for i in range(1, 11)%}
+        <section class="section">
+          <div class="columns">
+            <div class="column is-narrow">
+              <span class="is-title is-4">{{ i }}</span>
+            </div>
+            <div class="column">
+              <img
+                src="{{ cars[recommended[i]]['thumbnail'] }}"
+                alt="{{ cars[recommended[i]]['name'] }}"
+              />
+            </div>
+            <div class="column is-three-fifths">
+              <p class="title is-6">{{ cars[recommended[i]]['name'] }}</p>
+              <p
+                style="
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  -webkit-line-clamp: 6;
+                  -webkit-box-orient: vertical;
+                  display: -webkit-box;
+                "
+              >
+                {{ cars[recommended[i]]['description'] }}
+              </p>
+              <a
+                href="{{ cars[recommended[i]]['uri'] }}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ver más
+              </a>
+            </div>
+          </div>
+        </section>
+        {% endfor %}
+      </section>
     </div>
   </div>
 </section>
