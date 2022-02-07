@@ -1,0 +1,62 @@
+{% extends "layout.html" %} {% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">Sistema recomendador de automóviles</h1>
+    <div class="card p-4">
+      <h2 class="subtitle is-4">Personaliza tu perfil</h2>
+      <section class="section">
+        <form action="/recommend-car" method="post">
+          {% for car in cars %}
+          <div class="columns">
+            <div class="column">
+              <img src="{{ car['thumbnail'] }}" alt="{{ car['name'] }}" />
+            </div>
+            <div class="column is-three-fifths">
+              <p class="title is-6">{{ car['name'] }}</p>
+              <p
+                style="
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  -webkit-line-clamp: 6;
+                  -webkit-box-orient: vertical;
+                  display: -webkit-box;
+                "
+              >
+                {{ car['description'] }}
+              </p>
+              <a
+                href="{{ car['uri']}}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ver más
+              </a>
+            </div>
+            <div class="column">
+              <div class="field">
+                <label for="score-{{ car['uri'] }}" class="label"
+                  >Puntaje</label
+                >
+                <div class="select is-fullwidth">
+                  <select name="car_scores[]" id="score-{{ car['uri'] }}">
+                    <option value="" disabled selected>
+                      Selecciona un puntaje
+                    </option>
+                    {% for i in range(1, 11) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="row is-justify-content-flex-end is-flex">
+            <button type="submit" class="button is-primary">Confirmar</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</section>
+{% endblock %}

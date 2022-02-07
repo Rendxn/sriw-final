@@ -1,0 +1,20 @@
+SELECT DISTINCT ?name ?description ?thumbnail ?style ?manufacturer ?layout WHERE {
+    ?uri a dbo:Automobile;
+
+    rdfs:label ?name;
+    dbo:abstract ?description;
+    dbo:thumbnail ?thumbnail;
+
+    dbo:bodyStyle ?style;
+    dbo:manufacturer ?manufacturer;
+    dbp:class ?class;
+    dbp:modelYears ?year;
+    # dbp:engine ?engine;
+    dbo:layout ?layout.
+
+    FILTER(LANG(?name) = 'en')
+    FILTER(LANG(?description) = 'en')
+    FILTER(?year > "2000"^^xsd:integer)
+}
+GROUP BY ?uri
+LIMIT 1000
