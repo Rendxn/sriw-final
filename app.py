@@ -60,13 +60,31 @@ def recommend_car():
         # Begin the best part reccomend!
         sum_row = np.sum((people_extended_flat.T * distances_norm).T, axis=0)
 
+        distances_summed = []
+        # recorrido columnas y luego filas
+        for column in range(len(people_extended_flat[0])):
+            car_sum = 0
+            for row in range(len(people_extended_flat)):
+                # If it is not zero this man voted for the car column
+                car_sum += distances_norm[row] if people_extended_flat[row][column] != 0 else 0
+            distances_summed.append(car_sum)
+
+        reccomendation_row = []
+
+        for i in range(len(sum_row)):
+            current_sum = sum_row[i]
+            current_divider = distances_summed[i]
+
+            reccomendation_row.append(
+                0 if current_divider == 0 else current_sum / current_divider)
+
         # Read other weighted profiles
         # weightedProfiles = get_weighted_profiles_json()
 
         # return render_template('recommendation.html', recommended=indexes.tolist(), cars=cars)
 
         # save_scores(my_scores)
-        return jsonify(sum_row.tolist())
+        return jsonify(reccomendation_row)
 
 
 @ app.route('/test')
