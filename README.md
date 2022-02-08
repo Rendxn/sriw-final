@@ -27,3 +27,6 @@ $env:FLASK_APP = "app.py"
 $env:FLASK_ENV = "development"
 flask run
 ```
+
+# Documentación
+Ver Documentación [Aquí](docs/documentation.md)
