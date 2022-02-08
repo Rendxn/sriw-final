@@ -47,7 +47,7 @@ def recommend_car():
         people_scores = get_scores()
         people_extended = np.array([get_extended_score(
             p, imputate_with=0, length=len(encoded_cars)) for p in people_scores])
-        # Solver problems with shapes
+        # Solve problems with shapes
         people_extended_flat = people_extended.reshape(
             -1, people_extended.shape[-1])
 
@@ -57,34 +57,21 @@ def recommend_car():
         distances_norm = np.array([
             0 if dist == 0 else 1 / dist for dist in distances])
 
-        # Begin the best part reccomend!
+        # Get reccomendations
         sum_row = np.sum((people_extended_flat.T * distances_norm).T, axis=0)
+        repeated = np.tile(
+            distances_norm, (people_extended_flat.shape[1], 1)).T
+        mask = np.ma.masked_where(people_extended_flat == 0, repeated)
+        denominators = np.sum(mask, axis=0)
+        recommendation_row = sum_row / denominators
 
-        distances_summed = []
-        # recorrido columnas y luego filas
-        for column in range(len(people_extended_flat[0])):
-            car_sum = 0
-            for row in range(len(people_extended_flat)):
-                # If it is not zero this man voted for the car column
-                car_sum += distances_norm[row] if people_extended_flat[row][column] != 0 else 0
-            distances_summed.append(car_sum)
+        reccomendation_sorted = np.argsort(-1*recommendation_row)
 
-        reccomendation_row = []
-
-        for i in range(len(sum_row)):
-            current_sum = sum_row[i]
-            current_divider = distances_summed[i]
-
-            reccomendation_row.append(
-                0 if current_divider == 0 else current_sum / current_divider)
+        # Add this case to the reccomendation base
+        save_scores(my_scores)
 
         # Read other weighted profiles
-        # weightedProfiles = get_weighted_profiles_json()
-
-        # return render_template('recommendation.html', recommended=indexes.tolist(), cars=cars)
-
-        # save_scores(my_scores)
-        return jsonify(reccomendation_row)
+        return render_template('recommendation.html', recommended=reccomendation_sorted.tolist(), cars=cars)
 
 
 @ app.route('/test')
