@@ -2,7 +2,7 @@ from random import sample
 from flask import Flask, jsonify, render_template, redirect, request
 from cars.cars import fetch_cars_from_dbpedia
 from recommender.matrix import get_encoded_cars, get_weighted_matrix
-from recommender.profile import get_extended_score, get_profile, get_weighted_profile, save_scores
+from recommender.profile import get_extended_score, get_profile, get_weighted_profile, save_profile_json, save_scores
 from recommender.recommender import get_content_recommendation
 
 cars = fetch_cars_from_dbpedia()
@@ -47,6 +47,7 @@ def recommend_car():
         weighted_matrix = get_weighted_matrix(
             encoded_matrix=encoded_cars, weight_scores=extended_scores)
         profile = get_profile(weighted_matrix)
+        save_profile_json(profile)
         weighted_profile = get_weighted_profile(profile, extended_scores)
         indexes = get_content_recommendation(weighted_profile, encoded_cars)
 
