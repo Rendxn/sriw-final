@@ -28,6 +28,16 @@ def get_profile(weighted_matrix: np.ndarray):
     return np.sum(a=weighted_matrix, axis=0)
 
 
+def save_profile_json(profile: np.ndarray):
+    profile_lst = profile.tolist()
+    with open('resources/data/profiles.json', 'r+') as f:
+        data = json.load(f)
+        data.append(profile_lst)
+        f.seek(0)
+        json.dump(data, f, indent=4)
+        return profile_lst
+
+
 def get_weighted_profile(profile: np.ndarray, weight_scores: np.ndarray):
     # No hay necesidad de normalizar, pues todas las variables son indicadoras [0,1].
     return np.true_divide(profile, np.sum(weight_scores))
